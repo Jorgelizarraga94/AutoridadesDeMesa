@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingreso de administrador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="login">
+    <form id="form-login" class="formulario" novalidate>
+      <h1>Ingreso de administrador</h1>
+      <label class="campo">Usuario <input name="usuario" autocomplete="username"></label>
+      <label class="campo">Contraseña <input name="clave" type="password" autocomplete="current-password"></label>
+      <button class="boton" type="submit">Ingresar</button>
+      <div id="mensaje-login" class="mensaje" role="alert"></div>
+    </form>
+  </main>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/vistaLogin.js"></script>
+  <script>componenteNavbar.mostrar("login"); vistaLogin.iniciar();</script>
+</body>
+</html>

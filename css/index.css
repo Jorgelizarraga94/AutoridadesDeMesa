@@ -1,0 +1,11 @@
+.hero { background: var(--celeste-claro); border-bottom: 6px solid var(--sol); padding: 5rem 0 4.5rem; }
+.hero__interior { max-width: 760px; margin-left: max(1rem, calc((100% - 1080px) / 2)); }
+.hero h1 { font-size: clamp(2.2rem, 6vw, 3.8rem); font-weight: 800; }
+.hero p { font-size: 1.2rem; color: var(--suave); margin: 1.2rem 0 2rem; max-width: 56ch; }
+.hero__acciones { display: flex; gap: .8rem; flex-wrap: wrap; }
+.hero .boton--secundario { color: var(--marino); }
+.pasos { padding: 3.5rem 0 4rem; }
+.pasos h2 { margin-bottom: 1.5rem; font-size: 1.8rem; }
+.pasos ol { counter-reset: paso; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.pasos li { counter-increment: paso; background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); padding: 1.4rem; }
+.pasos li::before { content: counter(paso); display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--marino); color: var(--sol); font: 800 1.1rem var(--fuente-titulo); margin-bottom: .8rem; }

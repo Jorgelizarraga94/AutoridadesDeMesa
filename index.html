@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Autoridades de mesa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main>
+    <section class="hero">
+      <div class="contenedor hero__interior">
+        <h1>La votación necesita a alguien en cada mesa. Podés ser vos.</h1>
+        <p>Inscribite como autoridad de mesa, capacitate en una charla cerca de tu casa y sé parte de la jornada electoral.</p>
+        <div class="hero__acciones">
+          <a class="boton" href="inscripcion.html">Quiero inscribirme</a>
+          <a class="boton boton--secundario" href="charlas.html">Ver charlas</a>
+        </div>
+      </div>
+    </section>
+    <section class="contenedor pasos">
+      <h2>Cómo participar</h2>
+      <ol>
+        <li><strong>Inscribite</strong> con tus datos. Cada persona puede hacerlo una sola vez.</li>
+        <li><strong>Opcionalmente Elegí una charla </strong> y mirá en el mapa cómo llegar a la sede.</li>
+        <li><strong>Esperá la evaluación.</strong> Tu inscripción queda en estado Pendiente hasta que cierre el ciclo de charlas.</li>
+      </ol>
+    </section>
+  </main>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script>componenteNavbar.mostrar("inicio");</script>
+</body>
+</html>

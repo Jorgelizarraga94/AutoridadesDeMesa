@@ -1,0 +1,28 @@
+main { padding: 2.5rem 0 4rem; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
+.subtitulo { color: var(--suave); margin: .5rem 0 1.5rem; }
+.mapa-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.2rem; align-items: start; }
+#mapa { height: 600px; border: 1px solid var(--borde); border-radius: var(--radio); isolation: isolate; }
+
+.lista-mapa { display: grid; gap: .8rem; }
+.lista-mapa ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; max-height: 480px; overflow-y: auto; }
+.item-mapa { width: 100%; text-align: left; font: 400 .95rem var(--fuente); cursor: pointer; background: #fff; border: 1px solid var(--borde); border-left: 6px solid var(--celeste); border-radius: 10px; padding: .7rem .9rem; color: var(--texto); }
+.item-mapa:hover { background: var(--celeste-claro); }
+.item-mapa.activa { border-left-color: var(--sol); background: #fffbea; }
+.item-mapa strong { display: block; color: var(--marino); }
+.item-mapa small { color: var(--suave); display: block; }
+.volver { color: var(--marino); font-weight: 500; }
+
+/* Pines del mapa (gota rotada; el contenedor lo posiciona Leaflet, por eso se rota solo el interior) */
+.pin__forma { display: block; width: 24px; height: 24px; margin: 2px; border: 3px solid #fff; border-radius: 50% 50% 50% 0; background: var(--marino); transform: rotate(-45deg); box-shadow: 0 2px 6px rgba(0, 0, 0, .35); }
+.pin--elegida .pin__forma { background: var(--sol); box-shadow: 0 0 0 3px var(--marino), 0 3px 8px rgba(0, 0, 0, .4); }
+
+.popup-charla { font: 400 .95rem var(--fuente); }
+.popup-charla strong { font-family: var(--fuente-titulo); font-size: 1.05rem; color: var(--marino); }
+.popup-charla p { margin: .25rem 0; }
+
+@media (max-width: 860px) {
+  .mapa-layout { grid-template-columns: 1fr; }
+  #mapa { height: 420px; }
+  .lista-mapa ul { max-height: none; }
+}

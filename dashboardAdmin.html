@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboardAdmin.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="contenedor panel">
+    <section>
+      <h1>Panel de administración</h1>
+      <p class="subtitulo">Agregá, editá o eliminá las charlas y sus sedes.</p>
+      <div class="tabla-contenedor">
+        <table>
+          <thead><tr><th>Charla</th><th>Fecha y hora</th><th>Sede</th><th>Acciones</th></tr></thead>
+          <tbody id="tabla-charlas"></tbody>
+        </table>
+      </div>
+    </section>
+    <form id="form-charla" class="formulario" novalidate>
+      <h2 id="titulo-formulario">Nueva charla</h2>
+      <input type="hidden" name="id">
+      <div class="grilla-campos">
+        <label class="campo">Nombre <input name="nombre"></label>
+        <label class="campo">Tema <input name="tema"></label>
+        <label class="campo">Fecha <input name="fecha" type="date"></label>
+        <label class="campo">Horario <input name="horario" type="time"></label>
+        <label class="campo">Nombre de la sede <input name="nombreSede"></label>
+        <label class="campo">Calle <input name="calle"></label>
+        <label class="campo">Número <input name="numero"></label>
+        <label class="campo">Latitud <input name="latitud" inputmode="decimal" placeholder="-34.5427"></label>
+        <label class="campo">Longitud <input name="longitud" inputmode="decimal" placeholder="-58.7120"></label>
+      </div>
+      <div class="acciones-formulario">
+        <button class="boton" type="submit" id="boton-guardar">Guardar charla</button>
+        <button class="boton boton--secundario" type="button" id="boton-cancelar" hidden>Cancelar edición</button>
+      </div>
+      <div id="mensaje-dashboard" class="mensaje" role="alert"></div>
+    </form>
+  </main>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/vistaDashboard.js"></script>
+  <script>componenteNavbar.mostrar("panel"); vistaDashboard.iniciar();</script>
+</body>
+</html>
