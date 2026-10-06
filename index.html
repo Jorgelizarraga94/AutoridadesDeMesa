@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Autoridades de mesa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main>
+    <div class="contenedor" id="mensaje-inicio" role="status"></div>
+    <section class="hero">
+      <div class="contenedor hero__interior">
+        <h1>La votación necesita a alguien en cada mesa. Podés ser vos.</h1>
+        <p>Inscribite como autoridad de mesa, capacitate en una charla cerca de tu casa y sé parte de la jornada electoral.</p>
+        <div class="hero__acciones">
+          <a class="boton" id="boton-inscripcion" href="inscripcion.html">Quiero inscribirme</a>
+          <a class="boton boton--secundario" id="boton-charlas" href="charlas.html">Ver charlas</a>
+        </div>
+        <p class="mensaje mensaje--info aviso-inscripcion" id="aviso-inscripcion" role="status" hidden>Las inscripciones no se encuentran abiertas. Se abrirán luego de la última charla programada.</p>
+      </div>
+    </section>
+    <section class="contenedor pasos" id="como-participar">
+      <h2>Cómo participar</h2>
+      <ol>
+        <li><strong>Las charlas son opcionales.</strong> Podés elegir una y consultar su sede en el mapa, pero no son un requisito para participar.</li>
+        <li><strong>Inscribite luego de la última charla.</strong> El formulario se habilita cuando finaliza el ciclo de charlas.</li>
+        <li><strong>Comienza el período de evaluación.</strong> Después de inscribirte, tu solicitud queda pendiente mientras se revisan tus datos.</li>
+      </ol>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/presentacion/componenteFooter.js"></script>
+  <script>
+    componenteNavbar.mostrar(window.location.hash === "#como-participar" ? "proceso" : "inicio");
+    componenteFooter.mostrar();
+    const avisoSesion = sessionStorage.getItem("avisoInicio");
+    if (avisoSesion) {
+      mensajes.mostrarExito(document.getElementById("mensaje-inicio"), avisoSesion);
+      sessionStorage.removeItem("avisoInicio");
+    }
+    document.getElementById("boton-charlas").hidden = servicioCharlas.consultarCharlas().length === 0;
+    if (!servicioCharlas.estaDisponibleInscripcion()) {
+      document.getElementById("boton-inscripcion").hidden = true;
+      document.getElementById("aviso-inscripcion").hidden = false;
+    }
+  </script>
+</body>
+</html>

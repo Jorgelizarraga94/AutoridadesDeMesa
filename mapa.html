@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa de charlas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/mapa.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="contenedor">
+    <h1>Mapa de charlas</h1>
+    <p class="subtitulo">La sede que elegiste aparece en amarillo. Las demás charlas están marcadas en azul.</p>
+    <div id="mensaje-mapa" class="mensaje" role="status"></div>
+    <div id="contenido-mapa" class="mapa-layout">
+      <div id="mapa" role="application" aria-label="Mapa con las sedes de las charlas"></div>
+      <aside class="lista-mapa">
+        <button id="boton-ver-todas" class="boton boton--chico" type="button">Ver todas las charlas</button>
+        <ul id="lista-mapa"></ul>
+        <a class="volver" href="charlas.html">Volver al listado de charlas</a>
+      </aside>
+    </div>
+  </main>
+  <footer id="footer"></footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioMapa.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/vistaMapa.js"></script>
+  <script src="src/presentacion/componenteFooter.js"></script>
+  <script>componenteNavbar.mostrar("charlas"); componenteFooter.mostrar(); vistaMapa.mostrar();</script>
+</body>
+</html>

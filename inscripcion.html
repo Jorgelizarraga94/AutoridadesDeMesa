@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inscripción de voluntarios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/inscripcion.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="contenedor">
+    <h1>Inscripción de voluntarios</h1>
+    <p class="subtitulo" id="descripcion-inscripcion">Completá tus datos. Cada persona puede inscribirse una sola vez (se controla por DNI y por mail).</p>
+    <p class="aviso-obligatorio" id="aviso-obligatorio"><span class="obligatorio" aria-hidden="true">*</span> Campo obligatorio</p>
+    <div id="mensaje-inscripcion" class="mensaje" role="alert"></div>
+    <form id="form-inscripcion" class="formulario" novalidate>
+      <fieldset>
+        <legend>Datos personales</legend>
+        <div class="grilla-campos">
+          <label class="campo">Nombre <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="nombre" required maxlength="50" autocomplete="given-name" placeholder="Ej: María José"></label>
+          <label class="campo">Apellido <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="apellido" required maxlength="50" autocomplete="family-name" placeholder="Ej: Pérez"></label>
+          <label class="campo">DNI (solo números, sin puntos) <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="dni" required maxlength="8" inputmode="numeric" autocomplete="off" placeholder="Ej: 30123456"></label>
+          <label class="campo">Fecha de nacimiento (mayor de 18 años) <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="fechaNacimiento" type="date" required></label>
+          <label class="campo">Teléfono <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="telefono" type="tel" required maxlength="20" autocomplete="tel" placeholder="Ej: 11 5555-1234"></label>
+          <label class="campo">Mail <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="mail" type="email" required maxlength="100" autocomplete="email" placeholder="nombre@correo.com"></label>
+          <label class="campo">Dirección <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="direccion" required maxlength="100" autocomplete="street-address" placeholder="Calle, número y localidad"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Datos electorales</legend>
+        <div class="grilla-campos">
+          <label class="campo">Distrito electoral <span class="obligatorio" aria-hidden="true">*</span>
+            <input name="distritoElectoral" required maxlength="60"></label>
+          <label class="campo">Partido político (si marcás que estás afiliado)
+            <input name="partidoPolitico" maxlength="60" disabled></label>
+        </div>
+        <label class="opcion"><input type="checkbox" name="fueAutoridad"> Ya fui autoridad de mesa</label>
+        <label class="opcion"><input type="checkbox" name="cumploCapacitacion"> Cumplí la capacitación</label>
+        <label class="opcion"><input type="checkbox" name="afiliado"> Estoy afiliado a un partido político</label>
+        <label class="opcion"><input type="checkbox" name="interes"> Tengo interés en participar</label>
+      </fieldset>
+      <button class="boton" type="submit">Enviar inscripción</button>
+    </form>
+  </main>
+  <footer id="footer"></footer>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/modelo/Ciudadano.js"></script>
+  <script src="src/modelo/Registro.js"></script>
+  <script src="src/datos/repositorioRegistros.js"></script>
+  <script src="src/logica/servicioInscripcion.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/vistaInscripcion.js"></script>
+  <script src="src/presentacion/componenteFooter.js"></script>
+  <script>componenteNavbar.mostrar("inscripcion"); componenteFooter.mostrar(); vistaInscripcion.iniciar();</script>
+</body>
+</html>

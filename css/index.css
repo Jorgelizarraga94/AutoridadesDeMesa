@@ -1,0 +1,14 @@
+.hero { position: relative; isolation: isolate; background: linear-gradient(110deg, #eaf4fc 0%, #f8fbfd 78%); border-bottom: 1px solid #c9dce9; padding: 4.7rem 0 4.3rem; }
+.hero::before { content: ""; position: absolute; z-index: -1; inset: 0 auto 0 0; width: 9px; background: linear-gradient(to bottom, var(--celeste) 0 33.33%, #fff 33.33% 66.66%, var(--celeste) 66.66%); }
+.hero__interior { max-width: 760px; margin-left: max(1rem, calc((100% - 1080px) / 2)); }
+.hero h1 { max-width: 19ch; font-size: 3.15rem; font-weight: 800; }
+.hero p { font-size: 1.12rem; color: var(--suave); margin: 1.2rem 0 2rem; max-width: 56ch; }
+.hero__acciones { display: flex; gap: .8rem; flex-wrap: wrap; }
+.hero .boton--secundario { color: var(--marino); }
+.pasos { padding: 3.2rem 0 4rem; }
+.pasos { scroll-margin-top: 100px; }
+.pasos h2 { margin-bottom: 1.3rem; font-size: 1.8rem; }
+.pasos ol { counter-reset: paso; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.pasos li { counter-increment: paso; background: #fff; border: 1px solid var(--borde); border-top: 3px solid var(--celeste); border-radius: var(--radio); padding: 1.25rem; }
+.pasos li::before { content: counter(paso, decimal-leading-zero); display: block; color: #3377a7; font: 800 1rem var(--fuente-titulo); margin-bottom: .65rem; }
+@media (max-width: 650px) { .hero { padding: 3.2rem 0; } .hero h1 { font-size: 2.25rem; } }

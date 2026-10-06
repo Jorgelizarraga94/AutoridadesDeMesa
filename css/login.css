@@ -1,0 +1,4 @@
+.login { min-height: 0; display: grid; place-items: center; padding: 2rem 1rem; background: linear-gradient(180deg, #eaf4fc 0 34%, var(--papel) 34%); }
+.login .formulario { width: min(440px, 100%); display: grid; gap: 1.1rem; box-shadow: 0 15px 38px rgba(21, 53, 80, .1); }
+.login h1 { font-size: 1.8rem; }
+.login .boton { justify-self: start; }

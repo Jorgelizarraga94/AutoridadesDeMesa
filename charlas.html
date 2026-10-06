@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Charlas de capacitación</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/charlas.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="contenedor">
+    <h1>Charlas de capacitación</h1>
+    <p class="subtitulo">Tocá una charla para verla en el mapa, junto con las demás sedes.</p>
+    <div id="mensaje-charlas" class="mensaje" role="status"></div>
+    <div id="lista-charlas" class="tarjetas"></div>
+  </main>
+  <footer id="footer"></footer>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/presentacion/componenteFooter.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioMapa.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/vistaCharlas.js"></script>
+  <script>componenteNavbar.mostrar("charlas"); componenteFooter.mostrar(); vistaCharlas.mostrar();</script>
+</body>
+</html>

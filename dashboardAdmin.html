@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboardAdmin.css">
+</head>
+<body>
+  <header id="navbar"></header>
+  <main class="contenedor panel">
+    <header class="panel__cabecera">
+      <h1>Panel de administración</h1>
+    </header>
+    <div class="panel__pestanas" role="tablist" aria-label="Secciones del panel">
+      <button class="boton boton--secundario" id="tab-charlas" type="button" role="tab" aria-selected="true" aria-controls="seccion-charlas">Charlas</button>
+      <button class="boton boton--secundario" id="tab-auditoria" type="button" role="tab" aria-selected="false" aria-controls="seccion-auditoria" tabindex="-1">Auditoría</button>
+    </div>
+    <section id="seccion-charlas" class="seccion-charlas" role="tabpanel" aria-labelledby="tab-charlas">
+      <section>
+        <h2>Charlas programadas</h2>
+        <div class="tabla-contenedor">
+          <table>
+            <thead><tr><th>Charla</th><th>Fecha y hora</th><th>Sede</th><th>Acciones</th></tr></thead>
+            <tbody id="tabla-charlas"></tbody>
+          </table>
+        </div>
+      </section>
+      <form id="form-charla" class="formulario" novalidate>
+        <h2 id="titulo-formulario">Nueva charla</h2>
+        <input type="hidden" name="id">
+        <div class="grilla-campos">
+          <label class="campo">Nombre <input name="nombre"></label>
+          <label class="campo">Tema <input name="tema"></label>
+          <label class="campo">Fecha <input name="fecha" type="date"></label>
+          <label class="campo">Horario <input name="horario" type="time"></label>
+          <label class="campo">Nombre de la sede <input name="nombreSede"></label>
+          <label class="campo">Calle <input name="calle"></label>
+          <label class="campo">Número <input name="numero"></label>
+          <label class="campo">Latitud <input name="latitud" inputmode="decimal" placeholder="-34.5427"></label>
+          <label class="campo">Longitud <input name="longitud" inputmode="decimal" placeholder="-58.7120"></label>
+        </div>
+        <div class="acciones-formulario">
+          <button class="boton" type="submit" id="boton-guardar">Guardar charla</button>
+          <button class="boton boton--secundario" type="button" id="boton-cancelar" hidden>Cancelar edición</button>
+        </div>
+        <div id="mensaje-dashboard" class="mensaje" role="alert"></div>
+      </form>
+    </section>
+    <section id="seccion-auditoria" role="tabpanel" aria-labelledby="tab-auditoria" hidden>
+      <h2>Auditoría de inscripciones</h2>
+      <div class="auditoria__vistas" role="tablist" aria-label="Estado de las auditorías">
+        <button class="boton boton--secundario" id="tab-auditorias-pendientes" type="button" role="tab" aria-selected="true" aria-controls="panel-pendientes">Pendientes</button>
+        <button class="boton boton--secundario" id="tab-auditorias-finalizadas" type="button" role="tab" aria-selected="false" aria-controls="panel-finalizadas" tabindex="-1">Auditorías finalizadas</button>
+      </div>
+      <div id="panel-pendientes" role="tabpanel" aria-labelledby="tab-auditorias-pendientes">
+        <p id="sin-pendientes" class="mensaje mensaje--ok" role="status" hidden>No hay auditorías pendientes.</p>
+      <div id="revision-auditoria" class="revision-auditoria" hidden>
+        <div class="auditoria__navegacion">
+          <button class="boton boton--secundario" id="auditoria-anterior" type="button">Anterior</button>
+          <span id="auditoria-posicion" aria-live="polite"></span>
+          <button class="boton boton--secundario" id="auditoria-siguiente" type="button">Siguiente</button>
+        </div>
+        <p id="auditoria-estado" class="auditoria__estado"></p>
+        <dl id="datos-inscripto" class="datos-auditoria"></dl>
+        <label class="campo" for="descripcion-auditoria">Descripción de la revisión
+          <textarea id="descripcion-auditoria" maxlength="500" rows="4"></textarea>
+        </label>
+        <div class="acciones-formulario">
+          <button class="boton" id="auditoria-validar" type="button">Validar inscripción</button>
+          <button class="boton boton--peligro" id="auditoria-rechazar" type="button">Rechazar inscripción</button>
+        </div>
+      </div>
+        <div id="mensaje-auditoria" class="mensaje" role="status"></div>
+      </div>
+      <section id="panel-finalizadas" role="tabpanel" aria-labelledby="tab-auditorias-finalizadas" hidden>
+        <p id="sin-finalizadas" class="mensaje mensaje--info" role="status" hidden>Todavía no hay auditorías finalizadas.</p>
+        <div class="tabla-contenedor">
+          <table class="tabla-auditoria">
+            <thead><tr><th>Inscripto</th><th>DNI</th><th>Resultado</th><th>Descripción</th><th>Fecha de revisión</th></tr></thead>
+            <tbody id="tabla-auditorias-finalizadas"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+  <script src="src/datos/repositorioAdministradores.js"></script>
+  <script src="src/datos/repositorioSesion.js"></script>
+  <script src="src/logica/validaciones.js"></script>
+  <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/presentacion/componenteNavbar.js"></script>
+  <script src="src/modelo/Ciudadano.js"></script>
+  <script src="src/modelo/Registro.js"></script>
+  <script src="src/datos/repositorioRegistros.js"></script>
+  <script src="src/datos/repositorioAuditorias.js"></script>
+  <script src="src/logica/servicioAuditoria.js"></script>
+  <script src="src/modelo/Sede.js"></script>
+  <script src="src/modelo/Charla.js"></script>
+  <script src="datos/charlasIniciales.js"></script>
+  <script src="src/datos/repositorioCharlas.js"></script>
+  <script src="src/logica/servicioCharlas.js"></script>
+  <script src="src/presentacion/mensajes.js"></script>
+  <script src="src/presentacion/vistaAuditoria.js"></script>
+  <script src="src/presentacion/vistaDashboard.js"></script>
+  <script src="src/presentacion/componenteFooter.js"></script>
+  <script>componenteNavbar.mostrar("panel"); componenteFooter.mostrar(); vistaDashboard.iniciar();</script>
+</body>
+</html>

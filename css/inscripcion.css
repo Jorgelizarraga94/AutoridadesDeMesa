@@ -1,0 +1,11 @@
+main { padding: 2.5rem 0 4rem; max-width: 860px; }
+h1 { font-size: 2.35rem; }
+.subtitulo { color: var(--suave); margin: .5rem 0 2rem; }
+fieldset { border: 0; padding: 0; margin: 0 0 1.8rem; }
+legend { font: 700 1.15rem var(--fuente-titulo); color: var(--marino); padding: 0 0 .9rem; border-bottom: 2px solid var(--celeste); margin-bottom: 1.1rem; width: 100%; }
+.aviso-obligatorio { margin: -1rem 0 1.5rem; font-size: .9rem; color: var(--suave); }
+.obligatorio { color: var(--error); font-weight: 700; }
+.campo input:disabled { opacity: .5; cursor: not-allowed; }
+.campo input[aria-invalid="true"] { border-color: var(--error); background: #fff6f5; }
+.campo__error { color: var(--error); font-size: .85rem; font-weight: 500; }
+@media (max-width: 600px) { h1 { font-size: 2rem; } main { padding-top: 1.8rem; } .formulario { padding: 1.1rem; } }
