@@ -2,10 +2,6 @@
 
 Sitio con inscripción de voluntarios, consulta de charlas con ubicación en mapa y panel de administración.
 
-## Cómo correrlo
-1. Descomprimir el proyecto y abrir `index.html` con doble clic (Chrome, Firefox o Edge). No hay que instalar nada.
-2. Se necesita internet para las fuentes y para el mapa externo (OpenStreetMap). Sin conexión todo funciona, salvo esos dos.
-
 ## Acceso de administrador
 Usuario: `admin` - Contraseña: `admin` (botón Login del navbar). Desde el panel se agregan, editan y eliminan charlas.
 
