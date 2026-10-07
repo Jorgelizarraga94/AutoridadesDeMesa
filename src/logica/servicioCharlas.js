@@ -37,11 +37,11 @@ const servicioCharlas = {
     if (!validaciones.esVacio(datos.fecha) && !validaciones.parsearFechaIso(datos.fecha)) {
       errores.push("Ingresá una fecha válida con formato dd/mm/aaaa.");
     }
-    if (validaciones.parsearCoordenada(datos.latitud, 90) === null) {
-      errores.push("La latitud debe ser un número entre -90 y 90.");
+    if (validaciones.parsearCoordenadaDms(datos.latitud, 90, ["N", "S"]) === null) {
+      errores.push('La latitud debe estar en grados, minutos y segundos (por ejemplo, 34° 32\' 33.72" S) y dentro del rango de 90°.');
     }
-    if (validaciones.parsearCoordenada(datos.longitud, 180) === null) {
-      errores.push("La longitud debe ser un número entre -180 y 180.");
+    if (validaciones.parsearCoordenadaDms(datos.longitud, 180, ["E", "O", "W"]) === null) {
+      errores.push('La longitud debe estar en grados, minutos y segundos (por ejemplo, 58° 42\' 43.20" O) y dentro del rango de 180°.');
     }
     return errores;
   },
@@ -62,8 +62,8 @@ const servicioCharlas = {
         direccion: {
           calle: datos.calle,
           numero: datos.numero,
-          latitud: validaciones.parsearCoordenada(datos.latitud, 90),
-          longitud: validaciones.parsearCoordenada(datos.longitud, 180)
+          latitud: validaciones.parsearCoordenadaDms(datos.latitud, 90, ["N", "S"]),
+          longitud: validaciones.parsearCoordenadaDms(datos.longitud, 180, ["E", "O", "W"])
         }
       }
     });

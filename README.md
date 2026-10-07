@@ -17,6 +17,8 @@ Usuario: `admin` - Contraseña: `admin` (botón Login del navbar). Desde el pane
 
 Cada página tiene su CSS en `css/<pagina>.css`; `css/base.css` guarda lo compartido (colores, navbar, botones, formularios).
 
+Al cargar o editar una charla, las coordenadas se ingresan en grados, minutos y segundos (por ejemplo, `34° 32' 33.72" S` y `58° 42' 43.20" O`). Se convierten a decimal internamente para ubicar las sedes en el mapa.
+
 ## Persistencia (localStorage)
 | Clave | Contenido |
 |---|---|

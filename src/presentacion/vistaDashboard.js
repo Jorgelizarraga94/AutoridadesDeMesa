@@ -113,8 +113,8 @@ const vistaDashboard = {
     campos.nombreSede.value = charla.sede.nombre;
     campos.calle.value = calle;
     campos.numero.value = numero;
-    campos.latitud.value = latitud;
-    campos.longitud.value = longitud;
+    campos.latitud.value = validaciones.formatearCoordenadaDms(latitud, "N", "S");
+    campos.longitud.value = validaciones.formatearCoordenadaDms(longitud, "E", "O");
 
     this.titulo.textContent = "Editar charla";
     this.formulario.classList.add("formulario--edicion");
