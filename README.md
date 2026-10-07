@@ -17,7 +17,7 @@ Usuario: `admin` - Contraseña: `admin` (botón Login del navbar). Desde el pane
 
 Cada página tiene su CSS en `css/<pagina>.css`; `css/base.css` guarda lo compartido (colores, navbar, botones, formularios).
 
-Al cargar o editar una charla, las coordenadas se ingresan en grados, minutos y segundos (por ejemplo, `34° 32' 33.72" S` y `58° 42' 43.20" O`). Se convierten a decimal internamente para ubicar las sedes en el mapa.
+Al cargar o editar una charla, se ingresa la calle, el número, la localidad y la provincia. La ubicación se busca automáticamente con Nominatim, el servicio de geocodificación de OpenStreetMap; las coordenadas resultantes se guardan para mostrar la sede en el mapa. La búsqueda requiere conexión a internet y una coincidencia válida de calle y localidad. El uso de Nominatim está sujeto a su [política de uso](https://operations.osmfoundation.org/policies/nominatim/) y los mapas/datos deben atribuirse a [OpenStreetMap](https://www.openstreetmap.org/copyright).
 
 ## Persistencia (localStorage)
 | Clave | Contenido |

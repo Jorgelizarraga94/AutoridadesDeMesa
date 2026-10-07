@@ -5,7 +5,9 @@ const CAMPOS_OBLIGATORIOS_CHARLA = {
   horario: "El horario",
   nombreSede: "El nombre de la sede",
   calle: "La calle",
-  numero: "El número"
+  numero: "El número",
+  localidad: "La localidad",
+  provincia: "La provincia"
 };
 
 const servicioCharlas = {
@@ -29,7 +31,7 @@ const servicioCharlas = {
 
   buscarPorId(id) { return repositorioCharlas.buscarPorId(id); },
 
-  validar(datos) {
+  validarFormulario(datos) {
     const errores = [];
     for (const [campo, etiqueta] of Object.entries(CAMPOS_OBLIGATORIOS_CHARLA)) {
       if (validaciones.esVacio(datos[campo])) errores.push(`${etiqueta} es obligatorio.`);
@@ -37,11 +39,16 @@ const servicioCharlas = {
     if (!validaciones.esVacio(datos.fecha) && !validaciones.parsearFechaIso(datos.fecha)) {
       errores.push("Ingresá una fecha válida con formato dd/mm/aaaa.");
     }
-    if (validaciones.parsearCoordenadaDms(datos.latitud, 90, ["N", "S"]) === null) {
-      errores.push('La latitud debe estar en grados, minutos y segundos (por ejemplo, 34° 32\' 33.72" S) y dentro del rango de 90°.');
+    return errores;
+  },
+
+  validar(datos) {
+    const errores = this.validarFormulario(datos);
+    if (!Number.isFinite(datos.latitud) || datos.latitud < -90 || datos.latitud > 90) {
+      errores.push("No se obtuvo una latitud válida para la dirección.");
     }
-    if (validaciones.parsearCoordenadaDms(datos.longitud, 180, ["E", "O", "W"]) === null) {
-      errores.push('La longitud debe estar en grados, minutos y segundos (por ejemplo, 58° 42\' 43.20" O) y dentro del rango de 180°.');
+    if (!Number.isFinite(datos.longitud) || datos.longitud < -180 || datos.longitud > 180) {
+      errores.push("No se obtuvo una longitud válida para la dirección.");
     }
     return errores;
   },
@@ -62,8 +69,10 @@ const servicioCharlas = {
         direccion: {
           calle: datos.calle,
           numero: datos.numero,
-          latitud: validaciones.parsearCoordenadaDms(datos.latitud, 90, ["N", "S"]),
-          longitud: validaciones.parsearCoordenadaDms(datos.longitud, 180, ["E", "O", "W"])
+          localidad: datos.localidad,
+          provincia: datos.provincia,
+          latitud: datos.latitud,
+          longitud: datos.longitud
         }
       }
     });

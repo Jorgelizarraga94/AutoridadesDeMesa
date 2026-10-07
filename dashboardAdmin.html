@@ -39,9 +39,10 @@
           <label class="campo">Nombre de la sede <input name="nombreSede"></label>
           <label class="campo">Calle <input name="calle"></label>
           <label class="campo">Número <input name="numero"></label>
-          <label class="campo">Latitud <input name="latitud" inputmode="text" placeholder="34° 32' 33.72&quot; S" title="Grados, minutos y segundos; por ejemplo, 34° 32' 33.72&quot; S"></label>
-          <label class="campo">Longitud <input name="longitud" inputmode="text" placeholder="58° 42' 43.20&quot; O" title="Grados, minutos y segundos; por ejemplo, 58° 42' 43.20&quot; O"></label>
+          <label class="campo">Localidad <input name="localidad" value="San Miguel"></label>
+          <label class="campo">Provincia <input name="provincia" value="Buenos Aires"></label>
         </div>
+        <p class="subtitulo">La ubicación se obtiene automáticamente con OpenStreetMap. Si no se encuentra una coincidencia para la calle y la localidad, revisá los datos. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© Colaboradores de OpenStreetMap</a></p>
         <div class="acciones-formulario">
           <button class="boton" type="submit" id="boton-guardar">Guardar charla</button>
           <button class="boton boton--secundario" type="button" id="boton-cancelar" hidden>Cancelar edición</button>
@@ -91,6 +92,7 @@
   <script src="src/datos/repositorioSesion.js"></script>
   <script src="src/logica/validaciones.js"></script>
   <script src="src/logica/servicioAutenticacion.js"></script>
+  <script src="src/logica/servicioGeocodificacion.js"></script>
   <script src="src/presentacion/componenteNavbar.js"></script>
   <script src="src/modelo/Ciudadano.js"></script>
   <script src="src/modelo/Registro.js"></script>

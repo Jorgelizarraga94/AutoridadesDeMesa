@@ -10,6 +10,8 @@ const vistaDashboard = {
     this.mensaje = document.getElementById("mensaje-dashboard");
     this.titulo = document.getElementById("titulo-formulario");
     this.botonCancelar = document.getElementById("boton-cancelar");
+    this.botonGuardar = document.getElementById("boton-guardar");
+    this.textoBotonGuardar = this.botonGuardar.textContent;
     const avisoSesion = sessionStorage.getItem("avisoPanel");
     if (avisoSesion) {
       mensajes.mostrarExito(this.mensaje, avisoSesion);
@@ -44,16 +46,45 @@ const vistaDashboard = {
     }));
   },
 
-  guardar() {
-    const esEdicion = this.formulario.elements.id.value !== "";
-    const resultado = servicioCharlas.guardar(leerFormulario(this.formulario));
-    if (!resultado.ok) {
-      mensajes.mostrarErrores(this.mensaje, resultado.errores);
+  async guardar() {
+    const datos = leerFormulario(this.formulario);
+    const erroresFormulario = servicioCharlas.validarFormulario(datos);
+    if (erroresFormulario.length > 0) {
+      mensajes.mostrarErrores(this.mensaje, erroresFormulario);
       return;
     }
-    this.salirDeEdicion();
-    mensajes.mostrarExito(this.mensaje, esEdicion ? "Charla actualizada." : "Charla agregada.");
-    this.mostrarCharlas();
+
+    const esEdicion = this.formulario.elements.id.value !== "";
+    this.botonGuardar.disabled = true;
+    this.botonGuardar.textContent = "Buscando ubicación...";
+    this.mensaje.className = "mensaje mensaje--info";
+    this.mensaje.textContent = "Buscando la dirección en OpenStreetMap...";
+
+    try {
+      const resultadoUbicacion = await servicioGeocodificacion.normalizar(datos);
+      if (!resultadoUbicacion.ok) {
+        mensajes.mostrarErrores(this.mensaje, [resultadoUbicacion.error]);
+        return;
+      }
+
+      const resultado = servicioCharlas.guardar({ ...datos, ...resultadoUbicacion.coordenadas });
+      if (!resultado.ok) {
+        mensajes.mostrarErrores(this.mensaje, resultado.errores);
+        return;
+      }
+      this.salirDeEdicion();
+      const detalleUbicacion = resultadoUbicacion.aproximada
+        ? " La ubicación es aproximada al tramo de la calle."
+        : "";
+      mensajes.mostrarExito(
+        this.mensaje,
+        `${esEdicion ? "Charla actualizada." : "Charla agregada."}${detalleUbicacion}`
+      );
+      this.mostrarCharlas();
+    } finally {
+      this.botonGuardar.disabled = false;
+      this.botonGuardar.textContent = this.textoBotonGuardar;
+    }
   },
 
   mostrarCharlas() {
@@ -104,7 +135,7 @@ const vistaDashboard = {
 
   editar(charla) {
     const campos = this.formulario.elements;
-    const { calle, numero, latitud, longitud } = charla.sede.direccion;
+    const { calle, numero, localidad, provincia } = charla.sede.direccion;
     Object.assign(campos.id, { value: charla.id });
     campos.nombre.value = charla.nombre;
     campos.tema.value = charla.tema;
@@ -113,8 +144,8 @@ const vistaDashboard = {
     campos.nombreSede.value = charla.sede.nombre;
     campos.calle.value = calle;
     campos.numero.value = numero;
-    campos.latitud.value = validaciones.formatearCoordenadaDms(latitud, "N", "S");
-    campos.longitud.value = validaciones.formatearCoordenadaDms(longitud, "E", "O");
+    campos.localidad.value = localidad || "San Miguel";
+    campos.provincia.value = provincia || "Buenos Aires";
 
     this.titulo.textContent = "Editar charla";
     this.formulario.classList.add("formulario--edicion");

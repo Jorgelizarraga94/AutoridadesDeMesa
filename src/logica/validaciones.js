@@ -75,40 +75,4 @@ const validaciones = {
     return `${fecha.getFullYear()}-${dosDigitos(fecha.getMonth() + 1)}-${dosDigitos(fecha.getDate())}`;
   },
 
-  parsearCoordenadaDms(texto, limite, direcciones) {
-    const partes = /^\s*([+-]?\d{1,3})\s*°\s*(\d{1,2})\s*['′]\s*(\d{1,2}(?:[.,]\d+)?)\s*["″]\s*([NSEOW])?\s*$/i
-      .exec(String(texto));
-    if (!partes) return null;
-
-    const gradosConSigno = Number(partes[1]);
-    const grados = Math.abs(gradosConSigno);
-    const minutos = Number(partes[2]);
-    const segundos = Number(partes[3].replace(",", "."));
-    const direccion = partes[4]?.toUpperCase() || "";
-    const tieneSignoExplicito = /^[+-]/.test(partes[1]);
-    if (
-      grados > limite
-      || minutos >= 60
-      || segundos >= 60
-      || (grados === limite && (minutos > 0 || segundos > 0))
-      || (direccion && !direcciones.includes(direccion))
-      || (!direccion && !tieneSignoExplicito)
-    ) return null;
-
-    const signoExplicito = gradosConSigno < 0 ? -1 : 1;
-    const signoDireccion = ["S", "O", "W"].includes(direccion) ? -1 : 1;
-    if (direccion && tieneSignoExplicito && signoDireccion !== signoExplicito) return null;
-
-    const signo = direccion ? signoDireccion : signoExplicito;
-    return signo * (grados + minutos / 60 + segundos / 3600);
-  },
-
-  formatearCoordenadaDms(coordenada, direccionPositiva, direccionNegativa) {
-    const centesimasDeSegundo = Math.round(Math.abs(coordenada) * 360000);
-    const grados = Math.floor(centesimasDeSegundo / 360000);
-    const minutos = Math.floor((centesimasDeSegundo % 360000) / 6000);
-    const segundos = (centesimasDeSegundo % 6000) / 100;
-    const direccion = coordenada < 0 ? direccionNegativa : direccionPositiva;
-    return `${grados}° ${minutos}' ${segundos.toFixed(2)}" ${direccion}`;
-  }
 };
