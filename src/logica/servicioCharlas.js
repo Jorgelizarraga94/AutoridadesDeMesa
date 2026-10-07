@@ -17,13 +17,14 @@ const servicioCharlas = {
 
   estaDisponibleInscripcion() {
     const charlas = this.consultarCharlas();
-    if (charlas.length === 0) return true;
+    if (charlas.length === 0) return false;
 
-    const hoy = new Date();
-    const fechaHoy = [hoy.getFullYear(), String(hoy.getMonth() + 1).padStart(2, "0"),
-      String(hoy.getDate()).padStart(2, "0")].join("-");
-    const ultimaFecha = charlas[charlas.length - 1].fecha;
-    return ultimaFecha < fechaHoy;
+    const primeraCharla = charlas[0];
+    const ultimaCharla = charlas[charlas.length - 1];
+    const apertura = new Date(`${primeraCharla.fecha}T${primeraCharla.horario}:00`);
+    const cierre = new Date(`${ultimaCharla.fecha}T23:59:59.999`);
+    const ahora = new Date();
+    return ahora >= apertura && ahora <= cierre;
   },
 
   buscarPorId(id) { return repositorioCharlas.buscarPorId(id); },
@@ -32,6 +33,9 @@ const servicioCharlas = {
     const errores = [];
     for (const [campo, etiqueta] of Object.entries(CAMPOS_OBLIGATORIOS_CHARLA)) {
       if (validaciones.esVacio(datos[campo])) errores.push(`${etiqueta} es obligatorio.`);
+    }
+    if (!validaciones.esVacio(datos.fecha) && !validaciones.parsearFechaIso(datos.fecha)) {
+      errores.push("Ingresá una fecha válida con formato dd/mm/aaaa.");
     }
     if (validaciones.parsearCoordenada(datos.latitud, 90) === null) {
       errores.push("La latitud debe ser un número entre -90 y 90.");

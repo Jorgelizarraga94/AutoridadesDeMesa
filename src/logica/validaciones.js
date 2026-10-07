@@ -37,9 +37,25 @@ const validaciones = {
   // --- Fechas ---
   // Se arma con componentes locales: new Date("aaaa-mm-dd") se interpreta en UTC y puede correrse un día.
   parsearFechaIso(fechaIso) {
-    const [anio, mes, dia] = String(fechaIso).split("-").map(Number);
+    const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(fechaIso));
+    if (!partes) return null;
+    const anio = Number(partes[1]);
+    const mes = Number(partes[2]);
+    const dia = Number(partes[3]);
     const fecha = new Date(anio, mes - 1, dia);
-    return Number.isNaN(fecha.getTime()) ? null : fecha;
+    if (fecha.getFullYear() !== anio || fecha.getMonth() !== mes - 1 || fecha.getDate() !== dia) return null;
+    return fecha;
+  },
+
+  parsearFechaDdMmAaaa(fecha) {
+    const partes = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(fecha).trim());
+    if (!partes) return null;
+    const fechaIso = `${partes[3]}-${partes[2]}-${partes[1]}`;
+    return this.parsearFechaIso(fechaIso) ? fechaIso : null;
+  },
+
+  formatearFechaDdMmAaaa(fechaIso) {
+    return this.parsearFechaIso(fechaIso) ? fechaIso.split("-").reverse().join("/") : "";
   },
 
   edadEnAnios(fechaIso) {

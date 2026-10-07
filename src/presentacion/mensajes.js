@@ -67,7 +67,10 @@ function leerFormulario(formulario) {
   const datos = {};
   for (const campo of formulario.elements) {
     if (!campo.name) continue;
-    datos[campo.name] = campo.type === "checkbox" ? campo.checked : campo.value.trim();
+    const valor = campo.type === "checkbox" ? campo.checked : campo.value.trim();
+    datos[campo.name] = campo.dataset.formatoFecha === "dd/mm/aaaa"
+      ? validaciones.parsearFechaDdMmAaaa(valor) || valor
+      : valor;
   }
   return datos;
 }

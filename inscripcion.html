@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,7 @@
           <label class="campo">DNI (solo números, sin puntos) <span class="obligatorio" aria-hidden="true">*</span>
             <input name="dni" required maxlength="8" inputmode="numeric" autocomplete="off" placeholder="Ej: 30123456"></label>
           <label class="campo">Fecha de nacimiento (mayor de 18 años) <span class="obligatorio" aria-hidden="true">*</span>
-            <input name="fechaNacimiento" type="date" required></label>
+            <input name="fechaNacimiento" type="text" inputmode="numeric" placeholder="dd/mm/aaaa" maxlength="10" pattern="\d{2}/\d{2}/\d{4}" data-formato-fecha="dd/mm/aaaa" required></label>
           <label class="campo">Teléfono <span class="obligatorio" aria-hidden="true">*</span>
             <input name="telefono" type="tel" required maxlength="20" autocomplete="tel" placeholder="Ej: 11 5555-1234"></label>
           <label class="campo">Mail <span class="obligatorio" aria-hidden="true">*</span>

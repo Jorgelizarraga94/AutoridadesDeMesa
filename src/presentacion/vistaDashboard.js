@@ -108,7 +108,7 @@ const vistaDashboard = {
     Object.assign(campos.id, { value: charla.id });
     campos.nombre.value = charla.nombre;
     campos.tema.value = charla.tema;
-    campos.fecha.value = charla.fecha;
+    campos.fecha.value = validaciones.formatearFechaDdMmAaaa(charla.fecha);
     campos.horario.value = charla.horario;
     campos.nombreSede.value = charla.sede.nombre;
     campos.calle.value = calle;

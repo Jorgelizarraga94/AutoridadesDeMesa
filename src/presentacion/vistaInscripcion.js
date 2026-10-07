@@ -17,11 +17,20 @@ const vistaInscripcion = {
       this.descripcion.hidden = true;
       this.avisoObligatorio.hidden = true;
       this.mensaje.className = "mensaje mensaje--info";
-      this.mensaje.textContent = "Las inscripciones no se encuentran abiertas porque se habilitarán luego de que finalice la última charla programada.";
+      const charlas = servicioCharlas.consultarCharlas();
+      if (charlas.length === 0) {
+        this.mensaje.textContent = "Las inscripciones se habilitarán cuando haya una charla programada.";
+      } else {
+        const primeraCharla = charlas[0];
+        const ultimaCharla = charlas[charlas.length - 1];
+        const apertura = new Date(`${primeraCharla.fecha}T${primeraCharla.horario}:00`);
+        this.mensaje.textContent = new Date() < apertura
+          ? `Las inscripciones abrirán el ${primeraCharla.fechaLegible()} a las ${primeraCharla.horario} hs, al comenzar la primera charla. Cerrarán al finalizar el día ${ultimaCharla.fechaLegible()}.`
+          : `El período de inscripción finalizó al terminar el día ${ultimaCharla.fechaLegible()}.`;
+      }
       return;
     }
     this.configurarLimpiezaAlEscribir();
-    this.configurarFechaNacimiento();
     this.configurarPartido();
 
     this.formulario.addEventListener("submit", evento => {
@@ -40,13 +49,6 @@ const vistaInscripcion = {
         if (limpio !== campo.value) campo.value = limpio;
       });
     }
-  },
-
-  // El calendario solo ofrece fechas de personas entre 18 y 100 años.
-  configurarFechaNacimiento() {
-    const campo = this.formulario.elements.fechaNacimiento;
-    campo.max = validaciones.fechaHaceAnios(EDAD_MINIMA);
-    campo.min = validaciones.fechaHaceAnios(EDAD_MAXIMA);
   },
 
   // El partido solo se pide (y se habilita) si la persona marca que está afiliada.

@@ -52,7 +52,7 @@ const servicioInscripcion = {
 
   inscribir(datos) {
     if (!servicioCharlas.estaDisponibleInscripcion()) {
-      return { ok: false, errores: { general: "Las inscripciones no se encuentran abiertas. Se abrirán luego de la última charla programada." } };
+      return { ok: false, errores: { general: "El período de inscripción todavía no comenzó o ya finalizó." } };
     }
 
     const errores = this.validar(datos);
