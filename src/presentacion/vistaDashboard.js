@@ -11,7 +11,6 @@ const vistaDashboard = {
     this.titulo = document.getElementById("titulo-formulario");
     this.botonCancelar = document.getElementById("boton-cancelar");
     this.botonGuardar = document.getElementById("boton-guardar");
-    this.textoBotonGuardar = this.botonGuardar.textContent;
     const avisoSesion = sessionStorage.getItem("avisoPanel");
     if (avisoSesion) {
       mensajes.mostrarExito(this.mensaje, avisoSesion);
@@ -46,7 +45,7 @@ const vistaDashboard = {
     }));
   },
 
-  async guardar() {
+  guardar() {
     const datos = leerFormulario(this.formulario);
     const erroresFormulario = servicioCharlas.validarFormulario(datos);
     if (erroresFormulario.length > 0) {
@@ -55,36 +54,14 @@ const vistaDashboard = {
     }
 
     const esEdicion = this.formulario.elements.id.value !== "";
-    this.botonGuardar.disabled = true;
-    this.botonGuardar.textContent = "Buscando ubicación...";
-    this.mensaje.className = "mensaje mensaje--info";
-    this.mensaje.textContent = "Buscando la dirección en OpenStreetMap...";
-
-    try {
-      const resultadoUbicacion = await servicioGeocodificacion.normalizar(datos);
-      if (!resultadoUbicacion.ok) {
-        mensajes.mostrarErrores(this.mensaje, [resultadoUbicacion.error]);
-        return;
-      }
-
-      const resultado = servicioCharlas.guardar({ ...datos, ...resultadoUbicacion.coordenadas });
-      if (!resultado.ok) {
-        mensajes.mostrarErrores(this.mensaje, resultado.errores);
-        return;
-      }
-      this.salirDeEdicion();
-      const detalleUbicacion = resultadoUbicacion.aproximada
-        ? " La ubicación es aproximada al tramo de la calle."
-        : "";
-      mensajes.mostrarExito(
-        this.mensaje,
-        `${esEdicion ? "Charla actualizada." : "Charla agregada."}${detalleUbicacion}`
-      );
-      this.mostrarCharlas();
-    } finally {
-      this.botonGuardar.disabled = false;
-      this.botonGuardar.textContent = this.textoBotonGuardar;
+    const resultado = servicioCharlas.guardar(datos);
+    if (!resultado.ok) {
+      mensajes.mostrarErrores(this.mensaje, resultado.errores);
+      return;
     }
+    this.salirDeEdicion();
+    mensajes.mostrarExito(this.mensaje, esEdicion ? "Charla actualizada." : "Charla agregada.");
+    this.mostrarCharlas();
   },
 
   mostrarCharlas() {

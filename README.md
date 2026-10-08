@@ -17,7 +17,7 @@ Usuario: `admin` - Contraseña: `admin` (botón Login del navbar). Desde el pane
 
 Cada página tiene su CSS en `css/<pagina>.css`; `css/base.css` guarda lo compartido (colores, navbar, botones, formularios).
 
-Al cargar o editar una charla, se ingresa la calle, el número, la localidad y la provincia. La ubicación se busca automáticamente con Nominatim, el servicio de geocodificación de OpenStreetMap; las coordenadas resultantes se guardan para mostrar la sede en el mapa. La búsqueda requiere conexión a internet y una coincidencia válida de calle y localidad. El uso de Nominatim está sujeto a su [política de uso](https://operations.osmfoundation.org/policies/nominatim/) y los mapas/datos deben atribuirse a [OpenStreetMap](https://www.openstreetmap.org/copyright).
+Al cargar o editar una charla se guarda la dirección de la sede, sin coordenadas. Al abrir el mapa, cada dirección se consulta en la API de normalización de direcciones [USIG](https://servicios.usig.buenosaires.gob.ar/normalizar/); las coordenadas devueltas por la API se usan para ubicar los marcadores y no se precargan ni se guardan. La búsqueda requiere conexión a internet y una dirección reconocida por USIG en la localidad indicada. Los mapas y datos deben atribuirse a [OpenStreetMap](https://www.openstreetmap.org/copyright).
 
 ## Persistencia (localStorage)
 | Clave | Contenido |

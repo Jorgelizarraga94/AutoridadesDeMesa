@@ -6,9 +6,8 @@ const servicioMapa = {
     return `mapa.html?charla=${charla.id}`;
   },
 
-  // Enlace a OpenStreetMap para abrir una sede en el sitio externo.
-  urlOpenStreetMap(sede) {
-    const { latitud, longitud } = sede.direccion;
+  // Enlace a OpenStreetMap para abrir una ubicación obtenida desde USIG.
+  urlOpenStreetMap({ latitud, longitud }) {
     return `https://www.openstreetmap.org/?mlat=${latitud}&mlon=${longitud}#map=17/${latitud}/${longitud}`;
   }
 };

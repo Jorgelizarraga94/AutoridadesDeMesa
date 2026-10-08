@@ -1,11 +1,9 @@
 const servicioGeocodificacion = (() => {
-  const URL_API = "https://nominatim.openstreetmap.org/search";
-  const INTERVALO_MINIMO_MS = 1100;
-  const cache = new Map();
-  let ultimaSolicitud = 0;
+  const URL_API = "https://servicios.usig.buenosaires.gob.ar/normalizar/";
+  const solicitudes = new Map();
 
   function normalizarTexto(texto) {
-    return String(texto)
+    return String(texto || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
@@ -25,108 +23,100 @@ const servicioGeocodificacion = (() => {
       && palabrasIngresadas.every(palabra => palabrasEncontradas.has(palabra));
   }
 
-  function coincideLocalidad(direccion, localidad) {
-    const nombres = [
-      direccion.city,
-      direccion.town,
-      direccion.village,
-      direccion.municipality,
-      direccion.suburb,
-      direccion.county,
-      direccion.state_district
-    ].filter(Boolean).map(normalizarTexto);
-    const localidadNormalizada = normalizarTexto(localidad);
-    return nombres.some(nombre => ` ${nombre} `.includes(` ${localidadNormalizada} `));
+  function contieneLocalidad(resultado, localidad) {
+    const buscada = normalizarTexto(localidad);
+    if (!buscada) return true;
+    return [resultado.nombre_localidad, resultado.nombre_partido]
+      .filter(Boolean)
+      .some(nombre => ` ${normalizarTexto(nombre)} `.includes(` ${buscada} `));
   }
 
-  function coincideProvincia(provinciaEncontrada, provinciaIngresada) {
-    const encontrada = normalizarTexto(provinciaEncontrada || "");
-    const ingresada = normalizarTexto(provinciaIngresada);
-    return encontrada.length > 0
-      && ingresada.length > 0
-      && (encontrada === ingresada || encontrada.includes(ingresada) || ingresada.includes(encontrada));
+  function coordenadasValidas(coordenadas) {
+    if (!coordenadas || Number(coordenadas.srid) !== 4326) return false;
+    const longitud = Number(coordenadas.x);
+    const latitud = Number(coordenadas.y);
+    return Number.isFinite(latitud)
+      && Number.isFinite(longitud)
+      && Math.abs(latitud) <= 90
+      && Math.abs(longitud) <= 180;
   }
 
-  async function esperarIntervaloMinimo() {
-    const espera = INTERVALO_MINIMO_MS - (Date.now() - ultimaSolicitud);
-    if (espera > 0) await new Promise(resolve => setTimeout(resolve, espera));
-    ultimaSolicitud = Date.now();
+  async function consultarUSIG(direccion) {
+    const url = new URL(URL_API);
+    url.searchParams.set("direccion", `${direccion.calle} ${direccion.numero}`);
+    url.searchParams.set("geocodificar", "true");
+    url.searchParams.set("srid", "4326");
+    url.searchParams.set("maxOptions", "50");
+
+    let respuesta;
+    try {
+      respuesta = await fetch(url);
+    } catch {
+      return {
+        ok: false,
+        error: "No se pudo conectar con el normalizador de direcciones USIG. Revisá tu conexión e intentá de nuevo."
+      };
+    }
+    if (!respuesta.ok) {
+      return {
+        ok: false,
+        error: "El normalizador de direcciones USIG no está disponible en este momento. Intentá de nuevo más tarde."
+      };
+    }
+
+    let datos;
+    try {
+      datos = await respuesta.json();
+    } catch {
+      return { ok: false, error: "USIG devolvió una respuesta inválida." };
+    }
+    if (!datos || !Array.isArray(datos.direccionesNormalizadas)) {
+      return { ok: false, error: "USIG devolvió una respuesta inválida." };
+    }
+
+    const localidad = direccion.localidad || "San Miguel";
+    const numeroIngresado = String(direccion.numero).trim();
+    const resultado = datos.direccionesNormalizadas.find(opcion =>
+      String(opcion.altura).trim() === numeroIngresado
+      && coincideCalle(direccion.calle, opcion.nombre_calle || "")
+      && contieneLocalidad(opcion, localidad)
+      && coordenadasValidas(opcion.coordenadas)
+    );
+
+    if (!resultado) {
+      return {
+        ok: false,
+        error: `USIG no encontró una ubicación para ${direccion.calle} ${direccion.numero} en ${localidad}. Revisá la dirección.`
+      };
+    }
+
+    return {
+      ok: true,
+      coordenadas: {
+        longitud: Number(resultado.coordenadas.x),
+        latitud: Number(resultado.coordenadas.y)
+      }
+    };
   }
 
   return {
-    async normalizar({ calle, numero, localidad, provincia }) {
-      const clave = [calle, numero, localidad, provincia].map(normalizarTexto).join("|");
-      if (cache.has(clave)) return cache.get(clave);
+    normalizar(direccion) {
+      const localidad = direccion.localidad || "San Miguel";
+      const clave = [
+        direccion.calle,
+        direccion.numero,
+        localidad,
+        direccion.provincia || "Buenos Aires"
+      ].map(normalizarTexto).join("|");
 
-      const url = new URL(URL_API);
-      url.searchParams.set("street", `${numero} ${calle}`);
-      url.searchParams.set("city", localidad);
-      url.searchParams.set("state", provincia);
-      url.searchParams.set("country", "Argentina");
-      url.searchParams.set("countrycodes", "ar");
-      url.searchParams.set("format", "jsonv2");
-      url.searchParams.set("addressdetails", "1");
-      url.searchParams.set("limit", "5");
-      url.searchParams.set("accept-language", "es");
-
-      await esperarIntervaloMinimo();
-      let respuesta;
-      try {
-        respuesta = await fetch(url);
-      } catch {
-        return { ok: false, error: "No se pudo conectar con OpenStreetMap. Revisá tu conexión e intentá de nuevo." };
+      if (!solicitudes.has(clave)) {
+        solicitudes.set(clave, consultarUSIG({ ...direccion, localidad }));
       }
-      if (!respuesta.ok) {
-        return { ok: false, error: "El servicio de ubicación no está disponible en este momento. Intentá de nuevo más tarde." };
-      }
-
-      let resultados;
-      try {
-        resultados = await respuesta.json();
-      } catch {
-        return { ok: false, error: "El servicio de ubicación devolvió una respuesta inválida." };
-      }
-      if (!Array.isArray(resultados)) {
-        return { ok: false, error: "El servicio de ubicación devolvió una respuesta inválida." };
-      }
-
-      const resultado = resultados.find(opcion => {
-        const direccion = opcion.address || {};
-        const coordenadasValidas = opcion.lat !== null
-          && opcion.lat !== undefined
-          && opcion.lon !== null
-          && opcion.lon !== undefined
-          && Number.isFinite(Number(opcion.lat))
-          && Number.isFinite(Number(opcion.lon))
-          && Math.abs(Number(opcion.lat)) <= 90
-          && Math.abs(Number(opcion.lon)) <= 180
-          && direccion.country_code === "ar";
-        const alturaCoincide = !direccion.house_number
-          || normalizarTexto(direccion.house_number) === normalizarTexto(numero);
-        return coordenadasValidas
-          && alturaCoincide
-          && coincideCalle(calle, direccion.road || "")
-          && coincideLocalidad(direccion, localidad)
-          && coincideProvincia(direccion.state, provincia);
+      const solicitud = solicitudes.get(clave);
+      return solicitud.then(resultado => {
+        if (!resultado.ok && solicitudes.get(clave) === solicitud) solicitudes.delete(clave);
+        return resultado;
       });
-
-      if (!resultado) {
-        return {
-          ok: false,
-          error: "No se encontró una coincidencia confiable para esa calle y localidad. Revisá la dirección o probá con otra forma de escribirla."
-        };
-      }
-
-      const ubicacion = {
-        ok: true,
-        coordenadas: {
-          latitud: Number(resultado.lat),
-          longitud: Number(resultado.lon)
-        },
-        aproximada: !resultado.address.house_number
-      };
-      cache.set(clave, ubicacion);
-      return ubicacion;
     }
   };
 })();

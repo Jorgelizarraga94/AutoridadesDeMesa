@@ -4,7 +4,7 @@ const vistaMapa = {
   ZOOM_SEDE: 16,
   ZOOM_MAXIMO_AL_ENCUADRAR: 15,
 
-  mostrar() {
+  async mostrar() {
     const aviso = document.getElementById("mensaje-mapa");
     const contenido = document.getElementById("contenido-mapa");
 
@@ -24,11 +24,32 @@ const vistaMapa = {
     this.crearMapa();
     this.marcadores = new Map();
     this.botonesLista = new Map();
-    this.charlas.forEach(charla => this.agregarMarcador(charla, charla.id === idElegida));
-    this.charlas.forEach(charla => this.agregarItemLista(charla));
+    this.ubicaciones = new Map();
+    this.mostrarAviso(aviso, "info", "Buscando las direcciones de las sedes en USIG...");
+
+    const resultados = await Promise.all(this.charlas.map(async charla => ({
+      charla,
+      resultado: await servicioGeocodificacion.normalizar(charla.sede.direccion)
+    })));
+    resultados.forEach(({ charla, resultado }) => {
+      if (resultado.ok) {
+        this.ubicaciones.set(charla.id, resultado.coordenadas);
+        this.agregarMarcador(charla, charla.id === idElegida, resultado.coordenadas);
+      }
+      this.agregarItemLista(charla, resultado);
+    });
     document.getElementById("boton-ver-todas").addEventListener("click", () => this.verTodas());
 
-    const elegida = this.charlas.find(charla => charla.id === idElegida);
+    const elegida = this.charlas.find(charla => charla.id === idElegida && this.ubicaciones.has(charla.id));
+    const fallidas = resultados.filter(({ resultado }) => !resultado.ok);
+    if (fallidas.length > 0) {
+      const detalle = fallidas.map(({ charla }) => charla.sede.nombre).join(", ");
+      this.mostrarAviso(
+        aviso,
+        "error",
+        `No se pudo obtener la ubicación USIG de ${fallidas.length} sede(s): ${detalle}. Revisá sus direcciones.`
+      );
+    }
     if (elegida) this.enfocar(elegida, this.ZOOM_ELEGIDA);
     else this.verTodas();
   },
@@ -46,8 +67,8 @@ const vistaMapa = {
     }).addTo(this.mapa);
   },
 
-  agregarMarcador(charla, esElegida) {
-    const { latitud, longitud } = charla.sede.direccion;
+  agregarMarcador(charla, esElegida, coordenadas) {
+    const { latitud, longitud } = coordenadas;
     const icono = L.divIcon({
       className: esElegida ? "pin pin--elegida" : "pin",
       html: '<span class="pin__forma"></span>',
@@ -61,7 +82,7 @@ const vistaMapa = {
       zIndexOffset: esElegida ? 1000 : 0 // la elegida queda por encima si hay sedes superpuestas
     }).addTo(this.mapa);
 
-    marcador.bindPopup(this.crearPopup(charla));
+    marcador.bindPopup(this.crearPopup(charla, coordenadas));
     marcador.on("click", () => {
       this.marcarActiva(charla.id);
       this.mostrarAviso(document.getElementById("mensaje-mapa"), "ok", `Sede seleccionada: ${charla.nombre}.`);
@@ -70,7 +91,7 @@ const vistaMapa = {
   },
 
   // Se arma con elementos del DOM (no con texto HTML) para que los datos de la charla nunca se interpreten como código.
-  crearPopup(charla) {
+  crearPopup(charla, coordenadas) {
     const crear = (etiqueta, texto) => {
       const elemento = document.createElement(etiqueta);
       elemento.textContent = texto;
@@ -80,7 +101,7 @@ const vistaMapa = {
     popup.className = "popup-charla";
 
     const enlace = crear("a", "Abrir en OpenStreetMap");
-    enlace.href = servicioMapa.urlOpenStreetMap(charla.sede);
+    enlace.href = servicioMapa.urlOpenStreetMap(coordenadas);
     enlace.target = "_blank";
     enlace.rel = "noopener noreferrer";
 
@@ -93,16 +114,23 @@ const vistaMapa = {
     return popup;
   },
 
-  agregarItemLista(charla) {
+  agregarItemLista(charla, resultado) {
     const boton = document.createElement("button");
     boton.type = "button";
     boton.className = "item-mapa";
     const nombre = document.createElement("strong");
     nombre.textContent = charla.nombre;
     const detalle = document.createElement("small");
-    detalle.textContent = `${charla.fechaLegible()} - ${charla.sede.nombre}`;
+    detalle.textContent = resultado.ok
+      ? `${charla.fechaLegible()} - ${charla.sede.nombre}`
+      : `${charla.fechaLegible()} - ${charla.sede.nombre} (ubicación no disponible: ${resultado.error})`;
+    if (!resultado.ok) {
+      boton.disabled = true;
+      boton.title = resultado.error;
+    }
     boton.append(nombre, detalle);
     boton.addEventListener("click", () => {
+      if (!this.ubicaciones.has(charla.id)) return;
       this.enfocar(charla, this.ZOOM_SEDE);
       this.mostrarAviso(document.getElementById("mensaje-mapa"), "ok", `Mostrando la sede de “${charla.nombre}”.`);
     });
@@ -122,11 +150,15 @@ const vistaMapa = {
 
   // Encuadra todas las sedes en la pantalla, para ver las charlas a la vez.
   verTodas() {
-    const puntos = this.charlas.map(({ sede }) => [sede.direccion.latitud, sede.direccion.longitud]);
+    const puntos = [...this.ubicaciones.values()].map(({ latitud, longitud }) => [latitud, longitud]);
+    if (puntos.length === 0) return;
     this.mapa.fitBounds(L.latLngBounds(puntos).pad(0.25), { maxZoom: this.ZOOM_MAXIMO_AL_ENCUADRAR });
     this.mapa.closePopup();
     this.marcarActiva(null);
-    this.mostrarAviso(document.getElementById("mensaje-mapa"), "ok", "El mapa muestra todas las sedes.");
+    const cantidadNoUbicadas = this.charlas.length - this.ubicaciones.size;
+    if (cantidadNoUbicadas === 0) {
+      this.mostrarAviso(document.getElementById("mensaje-mapa"), "ok", "El mapa muestra todas las sedes.");
+    }
   },
 
   marcarActiva(idCharla) {

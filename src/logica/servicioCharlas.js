@@ -42,20 +42,9 @@ const servicioCharlas = {
     return errores;
   },
 
-  validar(datos) {
-    const errores = this.validarFormulario(datos);
-    if (!Number.isFinite(datos.latitud) || datos.latitud < -90 || datos.latitud > 90) {
-      errores.push("No se obtuvo una latitud válida para la dirección.");
-    }
-    if (!Number.isFinite(datos.longitud) || datos.longitud < -180 || datos.longitud > 180) {
-      errores.push("No se obtuvo una longitud válida para la dirección.");
-    }
-    return errores;
-  },
-
   // Alta si los datos no traen id; modificación si lo traen.
   guardar(datos) {
-    const errores = this.validar(datos);
+    const errores = this.validarFormulario(datos);
     if (errores.length > 0) return { ok: false, errores };
 
     const charla = new Charla({
@@ -70,9 +59,7 @@ const servicioCharlas = {
           calle: datos.calle,
           numero: datos.numero,
           localidad: datos.localidad,
-          provincia: datos.provincia,
-          latitud: datos.latitud,
-          longitud: datos.longitud
+          provincia: datos.provincia
         }
       }
     });

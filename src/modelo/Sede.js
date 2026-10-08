@@ -2,7 +2,7 @@ class Sede {
   constructor({ id, nombre, direccion }) {
     this.id = id;
     this.nombre = nombre;
-    this.direccion = direccion; // { calle, numero, localidad, provincia, latitud, longitud }
+    this.direccion = direccion; // { calle, numero, localidad, provincia }
   }
 
   direccionCompleta() {
