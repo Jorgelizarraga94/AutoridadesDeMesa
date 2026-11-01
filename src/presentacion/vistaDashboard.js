@@ -62,6 +62,19 @@ const vistaDashboard = {
     this.salirDeEdicion();
     mensajes.mostrarExito(this.mensaje, esEdicion ? "Charla actualizada." : "Charla agregada.");
     this.mostrarCharlas();
+    if (!esEdicion) {
+      Swal.fire({
+        icon: "success",
+        title: "Charla generada correctamente",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#153550",
+        customClass: {
+          popup: "alerta-sitio",
+          title: "alerta-sitio__titulo",
+          confirmButton: "alerta-sitio__boton"
+        }
+      });
+    }
   },
 
   mostrarCharlas() {

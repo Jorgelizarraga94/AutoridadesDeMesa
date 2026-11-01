@@ -38,6 +38,10 @@ const servicioCharlas = {
     }
     if (!validaciones.esVacio(datos.fecha) && !validaciones.parsearFechaIso(datos.fecha)) {
       errores.push("Ingresá una fecha válida con formato dd/mm/aaaa.");
+    } else if (!validaciones.esVacio(datos.fecha)) {
+      const ahora = new Date();
+      const hoy = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-${String(ahora.getDate()).padStart(2, "0")}`;
+      if (datos.fecha <= hoy) errores.push("La fecha de la charla debe ser posterior a hoy.");
     }
     return errores;
   },
