@@ -1,6 +1,6 @@
 // Datos de ejemplo: se usan para que la app tenga charlas apenas se abre.
 const CHARLAS_INICIALES = [
-  { id: 1, nombre: "Rol de la autoridad de mesa", tema: "Funciones y responsabilidades", fecha: "2026-11-10", horario: "18:00",
+  { id: 1, nombre: "Rol de la autoridad de mesa", tema: "Funciones y responsabilidades", fecha: "2026-10-10", horario: "18:00",
     sede: { id: 1, nombre: "Palacio Municipal", direccion: { calle: "Avenida Presidente Perón", numero: "254", localidad: "San Miguel", provincia: "Buenos Aires" } } },
   { id: 2, nombre: "Apertura y cierre de mesa", tema: "Procedimiento paso a paso", fecha: "2026-11-12", horario: "19:30",
     sede: { id: 2, nombre: "Biblioteca Central", direccion: { calle: "avenida balbin", numero: "560", localidad: "San Miguel", provincia: "Buenos Aires" } } },

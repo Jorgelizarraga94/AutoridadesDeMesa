@@ -140,5 +140,16 @@ const vistaAuditoria = {
       : "Inscripción rechazada.";
     const avisoPendientes = this.registros.length === 0 ? " No hay auditorías pendientes." : "";
     mensajes.mostrarExito(this.mensaje, resultadoTexto + avisoPendientes);
+    Swal.fire({
+      icon: "success",
+      title: aprobado ? "Validado correctamente" : "Inscripción rechazada correctamente",
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#153550",
+      customClass: {
+        popup: "alerta-sitio",
+        title: "alerta-sitio__titulo",
+        confirmButton: "alerta-sitio__boton"
+      }
+    });
   }
 };

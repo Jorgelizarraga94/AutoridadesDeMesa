@@ -68,6 +68,17 @@ const vistaInscripcion = {
   enviar() {
     this.limpiarTodosLosErrores();
     const resultado = servicioInscripcion.inscribir(leerFormulario(this.formulario));
+    Swal.fire({
+      icon: resultado.ok ? "success" : "error",
+      title: resultado.ok ? "registro exitoso" : "intente nuevamente",
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#153550",
+      customClass: {
+        popup: "alerta-sitio",
+        title: "alerta-sitio__titulo",
+        confirmButton: "alerta-sitio__boton"
+      }
+    });
     if (resultado.ok) {
       mensajes.mostrarExito(this.mensaje, "¡Inscripción recibida! Quedó en estado Pendiente.");
       this.formulario.reset();
