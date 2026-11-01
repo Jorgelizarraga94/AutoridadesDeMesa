@@ -64,6 +64,7 @@ a { color: inherit; }
 /* Alertas SweetAlert2 */
 .swal2-popup.alerta-sitio { border: 1px solid var(--borde); border-top: 5px solid var(--celeste); border-radius: var(--radio); color: var(--texto); font-family: var(--fuente); box-shadow: 0 24px 70px rgba(15, 38, 58, .24); }
 .swal2-popup .alerta-sitio__titulo { color: var(--marino); font-family: var(--fuente-titulo); font-size: 1.35rem; }
+.swal2-popup .alerta-sitio__detalle { color: var(--suave); font-family: var(--fuente); }
 .swal2-popup .alerta-sitio__boton { border: 1px solid var(--marino); border-radius: 5px; background: var(--marino); color: #fff; font: 700 .98rem var(--fuente); padding: .68rem 1.1rem; box-shadow: none; transition: background-color .15s, box-shadow .15s; }
 .swal2-popup .alerta-sitio__boton:hover { background: #214d70 !important; box-shadow: 0 3px 10px rgba(21, 53, 80, .14); }
 

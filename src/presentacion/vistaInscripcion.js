@@ -68,14 +68,17 @@ const vistaInscripcion = {
   enviar() {
     this.limpiarTodosLosErrores();
     const resultado = servicioInscripcion.inscribir(leerFormulario(this.formulario));
+    const errores = resultado.ok ? [] : Object.values(resultado.errores);
     Swal.fire({
       icon: resultado.ok ? "success" : "error",
-      title: resultado.ok ? "registro exitoso" : "intente nuevamente",
+      title: resultado.ok ? "registro exitoso" : "Intente nuevamente",
+      text: errores.join(" "),
       confirmButtonText: "Aceptar",
       confirmButtonColor: "#153550",
       customClass: {
         popup: "alerta-sitio",
         title: "alerta-sitio__titulo",
+        htmlContainer: "alerta-sitio__detalle",
         confirmButton: "alerta-sitio__boton"
       }
     });
